@@ -11,7 +11,7 @@ PyTorch implementation for progressive underwater image enhancement based on cro
 ## Overall Framework
 
 <p align="center">
-  <img src="assets/network_arch.png" alt="Overall framework of CDP-UIE" width="900">
+  <img src="assets/network_arch.svg" alt="Overall framework of CDP-UIE" width="900">
 </p>
 
 <p align="center">
