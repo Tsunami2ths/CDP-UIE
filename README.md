@@ -1,34 +1,65 @@
-# CDP-UIE: Cross-Domain Progressive Underwater Image Enhancement
+# CDP-UIE: Progressive Underwater Image Enhancement via Cross-Domain Decoupling
 
-> **Official PyTorch Implementation for the paper "CDP-UIE: Cross-Domain Progressive Underwater Image Enhancement"** > 
-> *The code will be fully open-sourced upon acceptance.*
+PyTorch implementation for progressive underwater image enhancement based on cross-domain decoupling.
 
 ![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)
 ![PyTorch 2.0.0](https://img.shields.io/badge/pytorch-2.0.0-orange.svg)
 ![License MIT](https://img.shields.io/badge/license-MIT-green.svg)
 
-## 📖 Introduction
-Underwater image enhancement suffers from severe color distortion (due to wavelength-dependent absorption) and structural blurring (due to forward scattering). Existing single-domain methods often face feature coupling and optimization conflicts. 
+---
 
-To completely release the fitting potential of the dual-stage architecture, we propose **CDP-UIE**, a progressive enhancement algorithm based on **frequency-band divide-and-conquer** and **cross-domain task alignment**:
-- **Stage 1: Global Refinement (GR)**. Operates in the LAB perceptual domain. Driven by low-frequency style suppression, it eliminates dominant water style and reconstructs a natural color base.
-- **Stage 2: Local Detail Reconstruction (LDR)**. Returns to the physical RGB spectral domain. Guided by high-frequency directional sharpening and the Physical Spectral-Aware Decoupling Module (PSADM), it restores fragile textures and fine details.
+## Overview
 
-*(Insert your network architecture diagram here: `![Network Architecture](assets/network_arch.png)`)*
+Underwater images usually suffer from wavelength-dependent color distortion, non-uniform illumination attenuation, and detail blurring caused by scattering. Existing enhancement methods often perform end-to-end restoration in a single color space, which may lead to feature coupling between illumination and color, as well as optimization conflicts between global color correction and local detail recovery.
+
+To address these issues, this repository implements a progressive underwater image enhancement framework based on cross-domain decoupling. The overall method follows a **"decouple first, then progressively restore"** pipeline:
+
+- **Stage 1** performs global color correction in the **LAB color space** and low-frequency sub-bands.
+- **Stage 2** performs local detail recovery in the **RGB color space** and high-frequency sub-bands.
+
+In addition, this repository also includes the single-stage baseline method based on **illumination-color decoupling in the LAB color space**, which serves as the foundation of the progressive framework.
 
 ---
 
-## ⚙️ Dependencies & Environment
+## Method Summary
 
-- **OS:** Ubuntu 20.04 or above / Windows 10
-- **Python:** 3.8+
-- **PyTorch:** 2.0.0+ (CUDA 11.8 recommended)
+### 1. Single-stage baseline in LAB color space
 
-```bash
-# Clone the repository
-git clone [https://github.com/Tsunami2ths/CDP-UIE.git](https://github.com/YourUsername/CDP-UIE.git)
-cd CDP-UIE
+The baseline model decouples luminance and chromaticity in the LAB color space and processes them in separate branches:
 
-# Install dependencies
-pip install -r requirements.txt
-pip install torch==2.0.0 torchvision==0.15.1 --index-url [https://download.pytorch.org/whl/cu118](https://download.pytorch.org/whl/cu118)
+- **MRARB**: Multi-scale Receptive-field Aggregation Residual Block for non-uniform illumination compensation in the luminance branch.
+- **CCFM**: Cross-branch Competitive Fusion Module for chromaticity correction in the color branch.
+
+This design improves illumination compensation and color restoration by reducing interference between brightness and chromaticity features.
+
+### 2. Dual-stage progressive enhancement framework
+
+The full model further introduces cross-color-space collaboration and frequency-band divide-and-conquer:
+
+- **Stage 1: Global color correction**
+  - Operates in the **LAB color space**
+  - Focuses on **low-frequency** degradation
+  - Uses **WBL-Low** to suppress underwater global degradation style
+
+- **Stage 2: Local detail recovery**
+  - Operates in the **RGB color space**
+  - Focuses on **high-frequency** detail restoration
+  - Uses **PSADM** to enhance compensation for severely attenuated channels
+  - Uses **WBL-High** to improve texture and edge recovery
+
+- **Training objective**
+  - Robust reconstruction loss
+  - Wavelet-domain collaborative constraints
+  - Hierarchical dynamic contrastive learning
+
+---
+
+## Overall Framework
+
+<p align="center">
+  <img src="assets/network_arch.png" alt="Overall framework of CDP-UIE" width="900">
+</p>
+
+<p align="center">
+  <em>Overall framework of the proposed progressive underwater image enhancement method.</em>
+</p>
