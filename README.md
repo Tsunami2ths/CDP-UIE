@@ -8,6 +8,18 @@ PyTorch implementation for progressive underwater image enhancement based on cro
 
 ---
 
+## Overall Framework
+
+<p align="center">
+  <img src="assets/network_arch.png" alt="Overall framework of CDP-UIE" width="900">
+</p>
+
+<p align="center">
+  <em>Overall framework of the proposed progressive underwater image enhancement method.</em>
+</p>
+
+---
+
 ## Overview
 
 Underwater images usually suffer from wavelength-dependent color distortion, non-uniform illumination attenuation, and detail blurring caused by scattering. Existing enhancement methods often perform end-to-end restoration in a single color space, which may lead to feature coupling between illumination and color, as well as optimization conflicts between global color correction and local detail recovery.
@@ -51,15 +63,3 @@ The full model further introduces cross-color-space collaboration and frequency-
   - Robust reconstruction loss
   - Wavelet-domain collaborative constraints
   - Hierarchical dynamic contrastive learning
-
----
-
-## Overall Framework
-
-<p align="center">
-  <img src="assets/network_arch.png" alt="Overall framework of CDP-UIE" width="900">
-</p>
-
-<p align="center">
-  <em>Overall framework of the proposed progressive underwater image enhancement method.</em>
-</p>
